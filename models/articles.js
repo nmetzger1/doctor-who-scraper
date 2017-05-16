@@ -15,6 +15,10 @@ var ArticleSchema = new Schema({
     img: {
         type: String,
         required: true
+    },
+    src: {
+        type: String,
+        required: true
     }
 });
 

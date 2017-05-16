@@ -25,7 +25,7 @@ app.use(bodyParser.urlencoded({
 app.use(express.static("public"));
 
 // Database configuration with mongoose
-mongoose.connect("mongodb://localhost/mongoosearticles");
+mongoose.connect("mongodb://localhost/whoarticles");
 var db = mongoose.connection;
 
 // Show any mongoose errors
@@ -39,4 +39,9 @@ db.once("open", function() {
 });
 
 //API Routes
-require("./routes/api-routes.js");
+require("./routes/api-routes.js")(app);
+
+// Listen on port 3000
+app.listen(3000, function() {
+    console.log("App running on port 3000!");
+});
