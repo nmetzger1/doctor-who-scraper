@@ -5,6 +5,10 @@ var cheerio = require("cheerio");
 //Database Models
 var Article = require("../models/articles.js");
 var Comment = require("../models/comments.js");
+
+//Global Variables
+var articleCount = 0;
+
 //Routes
 module.exports = function (app) {
 
@@ -46,51 +50,52 @@ module.exports = function (app) {
                     }
                     else {
                         console.log(doc);
-                    }
-                })
-
-            })
-        });
-
-        //Get io9 Articles
-        request("http://gizmodo.com/tag/doctor-who", function (error, response, html) {
-
-            if(error){
-                throw error;
-            }
-
-            var $ = cheerio.load(html);
-
-            //create empty newsPost object
-            var newsPost = {};
-
-            $(".js_post_item").each(function (i, element) {
-
-                newsPost.title = $(this).find("h1").text();
-                newsPost.url = $(this).find("a").attr("href");
-                newsPost.img = $(this).find("picture").find("source").first().attr("data-srcset");
-                newsPost.src = "io9";
-
-                //Send to database
-                var entry = new Article(newsPost);
-
-                entry.save(function (err, doc) {
-                    if(err){
-                        if(err.code === 11000){
-                            console.log("duplicate article found")
-                        }
-                        else {
-                            console.log(err);
-                        }
-                    }
-                    else {
-                        console.log(doc);
+                        articleCount++;
                     }
                 });
-            })
-        });
 
-        res.redirect("/");
+            });
+
+            //Get io9 Articles
+            request("http://gizmodo.com/tag/doctor-who", function (error, response, html) {
+
+                if(error){
+                    throw error;
+                }
+
+                var $ = cheerio.load(html);
+
+                //create empty newsPost object
+                var newsPost = {};
+
+                $(".js_post_item").each(function (i, element) {
+
+                    newsPost.title = $(this).find("h1").text();
+                    newsPost.url = $(this).find("a").attr("href");
+                    newsPost.img = $(this).find("picture").find("source").first().attr("data-srcset");
+                    newsPost.src = "io9";
+
+                    //Send to database
+                    var entry = new Article(newsPost);
+
+                    entry.save(function (err, doc) {
+                        if(err){
+                            if(err.code === 11000){
+                                console.log("duplicate article found")
+                            }
+                            else {
+                                console.log(err);
+                            }
+                        }
+                        else {
+                            articleCount++;
+                            console.log(doc);
+                        }
+                    });
+                });
+                res.send({articleCount: articleCount});
+            });
+        });
     });
 
     //return articles

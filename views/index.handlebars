@@ -42,8 +42,11 @@
                 <h4 class="modal-title" id="modalTitle">User Comments</h4>
             </div>
             <div class="modal-body">
+                <!-- User Comments -->
                 <div class="comment-div"></div>
+                <!-- END of User Comments -->
                 <hr>
+                <!-- Comments Form -->
                 <div class="comment-form">
                     <form id="submit-comment" method="post" action="/comments">
                         <input type="hidden" id="articleId">
@@ -57,6 +60,7 @@
                         <button type="submit" class="btn btn-default" id="submit-btn">Submit</button>
                     </form>
                 </div>
+                <!-- ENDf of Comments Form -->
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
@@ -65,11 +69,35 @@
     </div>
 </div>
 <!-- END of Comments Modal -->
+<!-- Scrape Success Modal -->
+<div class="modal fade" tabindex="-1" role="dialog" id="scrape-success">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Scrape Complete!</h4>
+            </div>
+            <div class="modal-body">
+                <p class="scrape-results"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- END of Scrape Success Modal -->
 
 <script type="application/javascript">
     $("#scraper-btn").on("click", function (event) {
+
+        event.preventDefault();
+
         $.get("/scrape").done(function (data) {
-            window.location.href="/";
+
+            $(".scrape-results").text(data.articleCount);
+
+            $("#scrape-success").modal("show");
         })
     });
 
