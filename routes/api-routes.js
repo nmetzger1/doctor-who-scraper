@@ -74,8 +74,6 @@ module.exports = function (app) {
                 //Send to database
                 var entry = new Article(newsPost);
 
-                console.log("io9", newsPost);
-
                 entry.save(function (err, doc) {
                     if(err){
                         if(err.code === 11000){
@@ -92,14 +90,12 @@ module.exports = function (app) {
             })
         });
 
-
         res.redirect("/");
     });
 
     //return articles
     app.get("/", function (req, res) {
 
-        console.log("GET!!");
         Article.find({}, function (error, doc) {
             if(error){
                 res.send(error);
@@ -109,5 +105,15 @@ module.exports = function (app) {
                 article: doc
             })
         })
+    });
+
+    app.get("/comments/:id", function (req, res) {
+        res.send([{
+            body: "This is a comment body",
+            user: "Chris Hardwick"
+        }, {
+            body: "This is another comment",
+            user: "OJ Simpson"
+        }])
     })
 };

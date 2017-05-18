@@ -42,20 +42,15 @@
                 <h4 class="modal-title" id="modalTitle">User Comments</h4>
             </div>
             <div class="modal-body">
-                <div class="comment-div">
-                    {{#each comment}}
-                        <p class="userComment">{{this.body}}</p>
-                        <p class="userName">{{this.user}}</p>
-                    {{/each}}
-                </div>
+                <div class="comment-div"></div>
                 <div class="comment-form">
                     <form id="submit-comment">
                         <input type="hidden" id="articleId">
-                        <p><label for="comment-body">Leave a Comment.</label></p>
-                        <textarea name="comment-body" form="submit-comment">Enter a coment....</textarea>
+                        <p><label for="comment-body">Leave a Comment</label></p>
+                        <textarea name="comment-body" form="submit-comment"></textarea>
 
                         <div class="form-group">
-                            <label for="userName">Enter Your Name.</label>
+                            <label for="userName">Enter Your Name</label>
                             <input type="text" id="userName" name="userName">
                         </div>
                         <button type="submit" class="btn btn-default" id="submit-btn">Submit</button>
@@ -74,12 +69,31 @@
 <script type="application/javascript">
     $("#scraper-btn").on("click", function (event) {
         $.get("/scrape").done(function (data) {
-            console.log("scrape complete");
+            window.location.href="/";
         })
     });
 
     $(".comment-btn").on("click", function (event) {
-        $('#commentModal').modal('show');
+
+        var articleId = $(this).attr('id');
+
+        $.get("/comments/" + articleId)
+                .done(function (data) {
+
+                    var comments = $('<div>');
+
+                    for(var i = 0; i < data.length; i++){
+                        var singleComment = $('<div class="comment">');
+
+                        singleComment.append('<p class="comment-body">' + data[i].body + '</p>');
+                        singleComment.append('<p class="comment-user">' + data[i].user + '</p>');
+
+                        comments.append(singleComment);
+                    }
+
+                    $('.comment-div').html(comments);
+
+                    $('#commentModal').modal('show');
+                })
     });
 </script>
-
