@@ -4,7 +4,7 @@ var cheerio = require("cheerio");
 
 //Database Models
 var Article = require("../models/articles.js");
-
+var Comment = require("../models/comments.js");
 //Routes
 module.exports = function (app) {
 
@@ -108,12 +108,41 @@ module.exports = function (app) {
     });
 
     app.get("/comments/:id", function (req, res) {
-        res.send([{
-            body: "This is a comment body",
-            user: "Chris Hardwick"
-        }, {
-            body: "This is another comment",
-            user: "OJ Simpson"
-        }])
-    })
+        Article.find({
+            _id: req.params.id
+        }).populate("comments")
+            .exec(function (err, doc) {
+                if(err){
+                    res.send(err);
+                }
+                else {
+                    res.send(doc);
+                }
+            })
+    });
+
+    app.post("/comments", function (req, res) {
+
+        var newComment = new Comment(req.body);
+
+        newComment.save(function (err, doc) {
+            if(err){
+                res.send(err);
+            }
+            else {
+                Article.findOneAndUpdate({}, { $push: {"comments": doc.id} }, { new: true },
+                    function (err, newDoc) {
+                        // Send any errors to the browser
+                        if (err) {
+                            res.send(err);
+                        }
+                        // Or send the user back to the home page
+                        else {
+                            res.redirect("/");
+                        }
+
+                    });
+            }
+        });
+    });
 };

@@ -17,7 +17,7 @@
         {{#each article}}
             <div class="newsArticle">
                 <img src="{{this.img}}" class="news-img">
-                <p class="article-title"><a href="{{this.url}}">{{this.title}}</a></p>
+                <p class="article-title"><a href="{{this.url}}" target="_blank">{{this.title}}</a></p>
                 <p class="article-source">
                     {{this.src}}
                     <span class="comment-btn-span">
@@ -43,15 +43,16 @@
             </div>
             <div class="modal-body">
                 <div class="comment-div"></div>
+                <hr>
                 <div class="comment-form">
-                    <form id="submit-comment">
+                    <form id="submit-comment" method="post" action="/comments">
                         <input type="hidden" id="articleId">
-                        <p><label for="comment-body">Leave a Comment</label></p>
-                        <textarea name="comment-body" form="submit-comment"></textarea>
+                        <p><label for="body">Leave a Comment</label></p>
+                        <textarea name="body" form="submit-comment"></textarea>
 
                         <div class="form-group">
-                            <label for="userName">Enter Your Name</label>
-                            <input type="text" id="userName" name="userName">
+                            <label for="user">Enter Your Name</label>
+                            <input type="text" id="user" name="user">
                         </div>
                         <button type="submit" class="btn btn-default" id="submit-btn">Submit</button>
                     </form>
@@ -64,7 +65,6 @@
     </div>
 </div>
 <!-- END of Comments Modal -->
-
 
 <script type="application/javascript">
     $("#scraper-btn").on("click", function (event) {
@@ -80,18 +80,24 @@
         $.get("/comments/" + articleId)
                 .done(function (data) {
 
-                    var comments = $('<div>');
+                    var commentsData = data[0].comments;
+                    var commentsDiv = $('<div>');
 
-                    for(var i = 0; i < data.length; i++){
-                        var singleComment = $('<div class="comment">');
-
-                        singleComment.append('<p class="comment-body">' + data[i].body + '</p>');
-                        singleComment.append('<p class="comment-user">' + data[i].user + '</p>');
-
-                        comments.append(singleComment);
+                    if(commentsData.length === 0){
+                        commentsDiv.append('<h4>No comments found.</h4>');
                     }
 
-                    $('.comment-div').html(comments);
+                    for(var i = 0; i < commentsData.length; i++){
+                        var singleComment = $('<div class="comment">');
+
+                        singleComment.append('<p class="comment-body">' + commentsData[i].body + '</p>');
+                        singleComment.append('<p class="comment-user">' + commentsData[i].user + '</p>');
+
+                        commentsDiv.append(singleComment);
+                    }
+
+                    $('.comment-div').html(commentsDiv);
+                    $('#articleId').val(articleId);
 
                     $('#commentModal').modal('show');
                 })
