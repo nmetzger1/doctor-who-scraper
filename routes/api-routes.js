@@ -37,7 +37,12 @@ module.exports = function (app) {
                 entry.save(function (err, doc) {
                     //check for errors
                     if(err){
-                        throw err;
+                        if(err.code === 11000){
+                            console.log("duplicate article found")
+                        }
+                        else {
+                            console.log(err);
+                        }
                     }
                     else {
                         console.log(doc);
@@ -47,6 +52,7 @@ module.exports = function (app) {
             })
         });
 
+        //Get io9 Articles
         request("http://gizmodo.com/tag/doctor-who", function (error, response, html) {
 
             if(error){
@@ -71,9 +77,13 @@ module.exports = function (app) {
                 console.log("io9", newsPost);
 
                 entry.save(function (err, doc) {
-                    //check for errors
                     if(err){
-                        throw err;
+                        if(err.code === 11000){
+                            console.log("duplicate article found")
+                        }
+                        else {
+                            console.log(err);
+                        }
                     }
                     else {
                         console.log(doc);
@@ -88,6 +98,16 @@ module.exports = function (app) {
 
     //return articles
     app.get("/", function (req, res) {
-        res.send("Hello");
+
+        console.log("GET!!");
+        Article.find({}, function (error, doc) {
+            if(error){
+                res.send(error);
+            }
+
+            res.render("index", {
+                article: doc
+            })
+        })
     })
-}
+};

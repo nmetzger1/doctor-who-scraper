@@ -2,6 +2,7 @@
 var express = require("express");
 var bodyParser = require("body-parser");
 var mongoose = require("mongoose");
+var exphbs = require("express-handlebars");
 
 // Requiring Article models
 var Article = require("./models/articles.js");
@@ -20,6 +21,10 @@ var app = express();
 app.use(bodyParser.urlencoded({
     extended: false
 }));
+
+//Handlebars
+app.engine("handlebars", exphbs({ defaultLayout: "main" }));
+app.set("view engine", "handlebars");
 
 // Make public a static dir
 app.use(express.static("public"));

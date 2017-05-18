@@ -1,0 +1,45 @@
+body{
+    background-color: cornflowerblue;
+}
+
+.newsArticle{
+    display: inline-block;
+    background-color: ghostwhite;
+    padding: .5%;
+    margin: 1%;
+}
+
+.news-img{
+    width: 300px;
+}
+
+.navbar-header{
+    padding: 1%;
+}
+
+.nav-btn{
+    margin: 15%;
+}
+
+p{
+    width: 300px;
+}
+
+.article-source{
+    position: relative;
+}
+
+#comment-btn{
+    background-color: ghostwhite;
+    border: none;
+}
+
+.comment-btn-span{
+    position: absolute;
+    right: 1%;
+}
+
+textarea{
+    width: 95%;
+    height: 10em;
+}
