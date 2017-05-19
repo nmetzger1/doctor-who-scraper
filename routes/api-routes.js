@@ -50,7 +50,6 @@ module.exports = function (app) {
                     }
                     else {
                         console.log(doc);
-                        articleCount++;
                     }
                 });
 
@@ -88,12 +87,11 @@ module.exports = function (app) {
                             }
                         }
                         else {
-                            articleCount++;
                             console.log(doc);
                         }
                     });
                 });
-                res.send({articleCount: articleCount});
+                res.send({message: "Scrape Completed Successfully!"});
             });
         });
     });
@@ -135,7 +133,7 @@ module.exports = function (app) {
                 res.send(err);
             }
             else {
-                Article.findOneAndUpdate({}, { $push: {"comments": doc.id} }, { new: true },
+                Article.findOneAndUpdate({_id: req.body._id}, { $push: {"comments": doc.id} }, { new: true },
                     function (err, newDoc) {
                         // Send any errors to the browser
                         if (err) {

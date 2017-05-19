@@ -49,7 +49,7 @@
                 <!-- Comments Form -->
                 <div class="comment-form">
                     <form id="submit-comment" method="post" action="/comments">
-                        <input type="hidden" id="articleId">
+                        <input type="hidden" id="articleId" name="_id">
                         <p><label for="body">Leave a Comment</label></p>
                         <textarea name="body" form="submit-comment"></textarea>
 
@@ -74,14 +74,14 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <button type="button" class="close scrape-btn" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title">Scrape Complete!</h4>
             </div>
             <div class="modal-body">
-                <p class="scrape-results"></p>
+                <h2><span class="scrape-results"></span></h2>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-default scrape-btn" data-dismiss="modal">Close</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
@@ -95,7 +95,7 @@
 
         $.get("/scrape").done(function (data) {
 
-            $(".scrape-results").text(data.articleCount);
+            $(".scrape-results").text(data.message);
 
             $("#scrape-success").modal("show");
         })
@@ -123,11 +123,16 @@
 
                         commentsDiv.append(singleComment);
                     }
-
-                    $('.comment-div').html(commentsDiv);
                     $('#articleId').val(articleId);
+                    console.log(articleId);
+                    $('.comment-div').html(commentsDiv);
+
 
                     $('#commentModal').modal('show');
                 })
     });
+    
+    $(".scrape-btn").on("click", function () {
+        window.location.href = "/";
+    })
 </script>
