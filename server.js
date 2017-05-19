@@ -16,6 +16,8 @@ mongoose.Promise = Promise;
 
 // Initialize Express
 var app = express();
+var PORT = process.env.PORT || 3000;
+
 
 // Use body parser with our app
 app.use(bodyParser.urlencoded({
@@ -30,7 +32,7 @@ app.set("view engine", "handlebars");
 app.use(express.static("public"));
 
 // Database configuration with mongoose
-mongoose.connect("mongodb://localhost/whoarticles");
+mongoose.connect("mongodb://heroku_z9168dkj:9atl3qs3jt1qg8pg7ub00sfl60@ds147681.mlab.com:47681/heroku_z9168dkj");
 var db = mongoose.connection;
 
 // Show any mongoose errors
@@ -47,6 +49,6 @@ db.once("open", function() {
 require("./routes/api-routes.js")(app);
 
 // Listen on port 3000
-app.listen(3000, function() {
+app.listen(PORT, function() {
     console.log("App running on port 3000!");
 });
